@@ -1,0 +1,65 @@
+apply plugin: "com.android.application"
+apply plugin: "kotlin-android"
+apply plugin: "dev.flutter.flutter-gradle-plugin"
+
+android {
+    namespace = "com.example.omra_track"
+
+    compileSdk = 36
+    ndkVersion = "27.0.12077973"
+
+    compileOptions {
+        coreLibraryDesugaringEnabled true
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
+    }
+
+    kotlinOptions {
+        jvmTarget = "17"
+    }
+
+    dexOptions {
+        javaMaxHeapSize "4g"
+    }
+
+    defaultConfig {
+        applicationId = "com.example.omra_track"
+        minSdk = 26
+        targetSdk = 36
+        versionCode = 1
+        versionName = "1.0.0"
+        multiDexEnabled true
+    }
+
+    buildTypes {
+        release {
+            signingConfig = signingConfigs.debug
+            // DÉSACTIVATION de la minification pour éviter les erreurs R8
+            minifyEnabled false
+            shrinkResources false
+            // proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+}
+
+flutter {
+    source = "../.."
+}
+
+dependencies {
+    coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:2.1.4'
+    implementation 'androidx.multidex:multidex:2.0.1'
+
+    // ML Kit
+    implementation 'com.google.mlkit:face-detection:16.1.5'
+
+    // gRPC / OkHttp
+    implementation 'com.squareup.okhttp3:okhttp:4.11.0'
+    implementation 'io.grpc:grpc-okhttp:1.56.0'
+
+    // Éviter doublons Play Core
+    configurations.all {
+        exclude group: 'com.google.android.play', module: 'core'
+        exclude group: 'com.google.android.play', module: 'core-common'
+    }
+}
